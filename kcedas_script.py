@@ -9,7 +9,7 @@ import pandas as pd
 
 open_workbook = xlwt.Workbook(encoding="utf-8")
 worksheet = open_workbook.add_sheet("ORTAK_BILGI", cell_overwrite_ok=True)
-
+KCETAS_ay= []
 KCETAS_DAIRE_NO = []
 KCETAS_BINA_NO = []
 KCETAS_SOKAK_Isim = []
@@ -25,6 +25,7 @@ KCETAS_AY = []
 KCETAS_ABONE_NO_TIPI_CON = []
 KCETAS_ABONE_NO_TIPI_all = []
 KCETAS_ABONE_NO_TIPI_List = []
+KCETAS_first_col=[]
 
 class Kcedas(object):
     def __init__(self, adres, abone_no, abone_tip, aktiftuk, ortalama, kesim):
@@ -62,8 +63,15 @@ for sheet in wb.sheets():
         df_row = Kcedas(*row_carrier)
         dataframe.append(df_row)
 # %%
+KCETAS_KESIM = []
+for df_row in dataframe:
+    if df_row.kesim != '':
+        KCETAS_KESIM.append(df_row.kesim)
+
+
 for df_row in dataframe:
     KCETAS_ADRES.append(df_row.adres)
+    KCETAS_first_col.append(df_row.adres)
     if df_row.aktiftuk != '':
         KCETAS_AKTIFTUK.append(df_row.aktiftuk)
     if df_row.ortalama !='':
@@ -105,7 +113,7 @@ for item in KCETAS_AY:
 '''
 KCETAS_ADRES
 # %%
-for patates in KCETAS_ADRES:
+for patates in KCETAS_first_col:
     try:
         if 'SEMT: ' in patates:
             KCETAS_MAHALLE_Isim.append(patates)
@@ -115,12 +123,17 @@ for patates in KCETAS_ADRES:
             KCETAS_BINA_NO.append(patates)
         elif 'DAIRENO: ' in patates:
             KCETAS_DAIRE_NO.append(patates)
-            if len(KCETAS_DAIRE_NO) > 0:
-                KCETAS_ADRES_List.append([KCETAS_MAHALLE_Isim[-1], KCETAS_SOKAK_Isim[-1], KCETAS_BINA_NO[-1], KCETAS_DAIRE_NO[-1]])
-            else:
-                KCETAS_ADRES_List.append([KCETAS_MAHALLE_Isim[-1], KCETAS_SOKAK_Isim[-1], KCETAS_BINA_NO[-1], 'Daire no yok'])
+        elif patates in AY:
+            KCETAS_ay.append(patates)
+            KCETAS_ADRES_List.append([KCETAS_ay[-1],KCETAS_MAHALLE_Isim[-1], KCETAS_SOKAK_Isim[-1], KCETAS_BINA_NO[-1], KCETAS_DAIRE_NO[-1]])
+
     except:
         print('KCETAS adres bilgilerini kontrol et!')
 len(KCETAS_ADRES_List)
 len(KCETAS_ABONE_NO_TIPI_List)
-KCETAS_ADRES_List
+len(KCETAS_AY)
+concatADRES = ['ADRES']
+for i in range(len(KCETAS_ADRES_List)):
+    concatADRES.append(KCETAS_ADRES_List[i][1]+KCETAS_ADRES_List[i][2]+KCETAS_ADRES_List[i][3]+KCETAS_ADRES_List[i][4])
+df = pd.DataFrame(KCETAS_KESIM)
+df.to_csv('kesim.csv',index = False)
