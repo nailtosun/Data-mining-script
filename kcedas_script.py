@@ -38,7 +38,7 @@ class Kcedas(object):
 
 AY = ['OCAK', 'ŞUBAT', 'MART', 'NİSAN', 'MAYIS', 'HAZİRAN', 'TEMMUZ', 'AĞUSTOS', 'EYLÜL', 'EKİM', 'KASIM', 'ARALIK']
 
-path = r'C:\Users\nailt\Desktop\KCEDAS-data-mining\tbtkdmkrs4.xlsx'
+path = r'C:\Users\nailt\Downloads\kilicaslan2_rev.xlsx'
 file_read = open (path, 'r')
 excel_data = file_read.readlines
 wb = xlrd.open_workbook(path)
@@ -55,7 +55,7 @@ for sheet in wb.sheets():
         for col in range (ncols):
             value_cell = sheet.cell(row, col).value
             try:
-                value_cell = str(int(value_cell))
+                value_cell = value_cell
             except ValueError:
                 pass
             finally:
@@ -63,12 +63,23 @@ for sheet in wb.sheets():
         df_row = Kcedas(*row_carrier)
         dataframe.append(df_row)
 # %%
+df_row.kesim
+
 KCETAS_KESIM = []
 for df_row in dataframe:
     if df_row.kesim != '':
         KCETAS_KESIM.append(df_row.kesim)
-
-
+df = pd.DataFrame(KCETAS_KESIM)
+df
+df.to_csv('ildem_kesim.csv',index=False)
+KCETAS_ABONE_TIPI = []
+df_row.abone_tip
+for df_row in dataframe:
+    if df_row.abone_tip != '':
+        KCETAS_ABONE_TIPI.append(df_row.abone_tip)
+df = pd.DataFrame(KCETAS_ABONE_TIPI)
+df.to_csv('ildemtipi.csv',index=False)
+'''
 for df_row in dataframe:
     KCETAS_ADRES.append(df_row.adres)
     KCETAS_first_col.append(df_row.adres)
@@ -100,17 +111,7 @@ for item in KCETAS_ABONE_NO_TIPI_all:
     if item[0] != KCETAS_ABONE_NO_TIPI_all_plus1[i][0]:
         KCETAS_ABONE_NO_TIPI_List.append(item)
     i = i + 1
-'''
-KCETAS_BILGI = []
-cout = 0
-for item in KCETAS_AY:
-    A = [x for x in KCETAS_ABONE_NO]
-    B = [y for y in KCETAS_AKTIFTUK]
-    C = [z for z in KCETAS_ORTALAMA]
-    KCETAS_BILGI.append([item, [A[cout]], B[cout], C[cout]])
-    cout = cout + 1
-#asd = pd.DataFrame({'AY':KCETAS_AY,'ABONE_NO':KCETAS_ABONE_NO,'AKTIF_TUK':KCETAS_AKTIFTUK, 'ORTALAMA':KCETAS_ORTALAMA})
-'''
+
 KCETAS_ADRES
 # %%
 for patates in KCETAS_first_col:
@@ -129,11 +130,15 @@ for patates in KCETAS_first_col:
 
     except:
         print('KCETAS adres bilgilerini kontrol et!')
-len(KCETAS_ADRES_List)
+KCETAS_ADRES_List
+df = pd.DataFrame(KCETAS_ADRES_List)
+df.to_csv('adres_list_ildem.csv',index = False)
+
 len(KCETAS_ABONE_NO_TIPI_List)
 len(KCETAS_AY)
 concatADRES = ['ADRES']
 for i in range(len(KCETAS_ADRES_List)):
     concatADRES.append(KCETAS_ADRES_List[i][1]+KCETAS_ADRES_List[i][2]+KCETAS_ADRES_List[i][3]+KCETAS_ADRES_List[i][4])
-df = pd.DataFrame(KCETAS_KESIM)
-df.to_csv('kesim.csv',index = False)
+df = pd.DataFrame(KCETAS_AKTIFTUK)
+
+df.to_csv('.csv',index = False)
